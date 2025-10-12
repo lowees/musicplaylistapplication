@@ -11,6 +11,12 @@
 const User = {
     users: [
         // add at least 1 mock user that matches the outlined requirements
+        {
+            _id: 1,
+            username: 'testuser',
+            password: 'password123',
+            resgistrationDate: 'Oct 12 2025',
+        }
     ],
 
     /**

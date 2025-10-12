@@ -16,8 +16,8 @@ const _sanitize = (user) => {
 
 router.post('/register', async (req, res) => {
     try {
-        // const registrationDate = new Date().toDateString;
-        const { username, password, registrationDate = new Date().toDateString } = req.body;
+        const registrationDate = new Date().toDateString();
+        const { username, password} = req.body;
 
         if (!username || !password) {
             return res.status(400).json({ error: 'Username and password required to register.' });
