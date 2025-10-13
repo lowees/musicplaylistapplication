@@ -88,4 +88,22 @@ router.put('/:id', (req, res) => {
         res.status(500).json({ error: 'Failed to add track to playlist' });
     }
 });
+
+router.delete('/:id', (req, res) => {
+    try {
+        const user = authenticate(req, res);
+        if (!user) return;
+
+        const { id } = req.params;
+        const playlist = Playlist.find('_id', parseInt(id, 10));
+        if (!playlist) {
+            return res.status(404).json({ error: 'Playlist not found' });
+        }
+        const deleted = Playlist.delete(playlist._id);
+        res.json(deleted);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Failed to delete playlist' });
+    }
+});
 export default router;
