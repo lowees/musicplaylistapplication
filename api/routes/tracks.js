@@ -7,7 +7,7 @@ const LASTFM_API_KEY = process.env.API_KEY;
 const LASTFM_BASE_URL = 'http://ws.audioscrobbler.com/2.0';
 
 // helper function to check if a track has a (mbid)
-const hasMbid = (track) => {
+const _hasMbid = (track) => {
     return track.mbid && track.mbid !== '';
 }
 
@@ -37,7 +37,7 @@ router.get('/search', async (req, res) => {
             };
         });
 
-        const filtered = minimal.filter(hasMbid);
+        const filtered = minimal.filter(_hasMbid);
 
         res.json(filtered);
     } catch (err) {
