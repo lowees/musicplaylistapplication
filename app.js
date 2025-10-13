@@ -1,10 +1,9 @@
 import express from 'express';
 import 'dotenv/config';
 
-// import games from './api/routes/games.js';
 import users from './api/routes/users.js';
 import playlists from './api/routes/playlists.js';
-// import libraries from './api/routes/libraries.js';
+import tracks from './api/routes/tracks.js';
 
 const PORT = 8888;
 
@@ -14,10 +13,10 @@ const app = express();
 app.use(express.json());
 
 // mount route handlers
-// app.use('/games', games);
+
 app.use('/users', users);
 app.use('/playlists', playlists);
-// app.use('/libraries', libraries);
+ app.use('/tracks', tracks);
 
 // start server
 app.listen(PORT, () => {

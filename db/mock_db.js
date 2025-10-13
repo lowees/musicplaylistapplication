@@ -57,8 +57,8 @@ const Playlist = {
                     "artist": "Coldplay",
                     "album": "Parachutes",
                     "mbid": "123"
-        }
-    ]
+                }
+            ]
 }
 
     ],
