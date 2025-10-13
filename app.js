@@ -3,6 +3,7 @@ import 'dotenv/config';
 
 // import games from './api/routes/games.js';
 import users from './api/routes/users.js';
+import playlists from './api/routes/playlists.js';
 // import libraries from './api/routes/libraries.js';
 
 const PORT = 8888;
@@ -15,6 +16,7 @@ app.use(express.json());
 // mount route handlers
 // app.use('/games', games);
 app.use('/users', users);
+app.use('/playlists', playlists);
 // app.use('/libraries', libraries);
 
 // start server
