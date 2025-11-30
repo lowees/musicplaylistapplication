@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        lowercase: true,
     }, 
     password: {
         type: String,
@@ -13,6 +14,7 @@ const UserSchema = new mongoose.Schema({
     registrationDate: {
         type: Date,
         default: Date.now,
+        required: false,
     }
 });
 

@@ -1,64 +1,21 @@
 import express from 'express';
 
-import { User, Playlist } from '../../db/mock_db.js';    
+import Playlist from '../models/Playlist.js';   
+import { verifyUser } from '../middleware/authorization.js';
 
 const router = express.Router();
 
-/** helper function to remove the password from a user object
- * @param {object} user - the user object.
- * @returns {object} the user object without the password
- */
-const _sanitize = (user) => {
-    const { password, ...rest } = user;
-    return rest;
-};
+router.use(verifyUser);
 
-/**
- * helper function for authenticating user requests
- * @param {object} req - the express request object
- * @param {object} res - the express response object
- * @returns {object} 403 - forbidden if authorization fails
- */
-function authenticate(req, res) {
-    const authorization  = req.get("Authorization");
-    if (!authorization) {
-        return res.status(403).json({ error: 'Authentication header not present.' });
-    }
-
-    const user = User.find('_id', parseInt(authorization));
-    if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-    return _sanitize(user);
-}
-/**
- * @route GET /playlists
- * @description Get all playlists for the authenticated user
- */
-router.get('/', (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const user = authenticate(req, res);
-        if (!user) return;
 
-        const populated = Playlist.populate(user._id);
-        res.json(populated);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: 'Failed to retrieve user playlists' });
-    }
- });
-
- router.post('/', (req, res) => {
-    try {
-        const user = authenticate(req, res);
-        if (!user) return;
-
-        const title = req.body.title;
+        const {title } = req.body;
         if(!title) {
             return res.status(400).json({ error: 'Playlist title is required' });
         }
 
-        const newPlaylist = Playlist.insert({ user_id: user._id, title, tracks: [] });
+        const newPlaylist =  await Playlist.create({ user: req.user._id, title, tracks: [] });
         res.status(201).json(newPlaylist);
     } catch (err) {
         console.log(err);
@@ -66,41 +23,38 @@ router.get('/', (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => { 
+router.put('/:id', async (req, res) => { 
     try {
-        const user = authenticate(req, res);
-        if (!user) return;
-
         const { id } = req.params;
-        const playlist = Playlist.find('_id', parseInt(id, 10));
+        const playlist = await Playlist.findById(id);
         if (!playlist) {
             return res.status(404).json({ error: 'Playlist not found' });
         }
         
-        const { track, artist, album, mbid} = req.body;
+        const { track, artist, album, mbid, image} = req.body;
         if (!track || !artist || !album || !mbid) {
             return res.status(400).json({ error: 'Track, artist, album, and mbid are required to add a track' });
         }
-        const addedTrack = Playlist.addToSet(playlist._id, { track, artist, album, mbid });
-        res.json(addedTrack);
+        const addedTrack = playlist.tracks.push({track, artist, album, mbid, image});
+        await playlist.save();
+        res.json(playlist);
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: 'Failed to add track to playlist' });
     }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
-        const user = authenticate(req, res);
-        if (!user) return;
-
+        const user = req.user;
         const { id } = req.params;
-        const playlist = Playlist.find('_id', parseInt(id, 10));
+        const playlist = await Playlist.findById(id);
         if (!playlist) {
             return res.status(404).json({ error: 'Playlist not found' });
         }
-        const deleted = Playlist.delete(playlist._id);
-        res.json(deleted);
+        
+        await playlist.deleteOne();
+        res.json({ message: 'Playlist deleted successfully' });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: 'Failed to delete playlist' });

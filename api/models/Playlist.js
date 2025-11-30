@@ -17,6 +17,9 @@ const trackSchema = new mongoose.Schema(
         album: {
             type: String
         },
+        image: {
+            type: String
+        }
     },
     { _id: false } 
 );

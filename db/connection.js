@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import mongoose from 'mongoose';
 
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
@@ -27,4 +28,5 @@ async function disconnect() {
     }
 }
 
+export { connect, disconnect };
 
