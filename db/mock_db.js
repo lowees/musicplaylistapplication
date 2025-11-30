@@ -54,12 +54,12 @@ const Playlist = {
             "tracks": [
                 {
                     "track": "Yellow",
-                    "artist": "Coldplay",
-                    "album": "Parachutes",
-                    "mbid": "123"
+                    "artist": "Wisp",
+                    "album": "Yellow",
+                    "mbid": "cb334081-c3a5-4a8f-8233-ee28d0d7795d"
                 }
             ]
-}
+        }
 
     ],
 

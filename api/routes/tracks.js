@@ -63,6 +63,8 @@ router.get('/:mbid', async (req, res) => {
             mbid: track_data.mbid,
             name: track_data.name,
             artist: track_data.artist.name,
+            // In case the track is a single and has no album, although I noticed
+            // if it is a single, lastFM labels the album as track title.
             album: track_data.album ? track_data.album.title : 'Single',
         };
         res.json(minimal);
@@ -71,9 +73,5 @@ router.get('/:mbid', async (req, res) => {
         res.status(500).json({ error: 'Failed to get track by mbid via LASTFM API' });
     }
 });
-
-    
-
-
 
 export default router;
